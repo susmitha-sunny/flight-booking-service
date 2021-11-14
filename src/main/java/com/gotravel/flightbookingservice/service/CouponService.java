@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Service
@@ -17,15 +18,15 @@ public class CouponService {
     @Autowired
     private CouponRepository couponRepository;
 
-    public CouponResponse getCouponResponse(final CouponRequest couponRequest) throws ValueNotFoundException{
+    public CouponResponse getCouponResponse(final CouponRequest couponRequest) throws ValueNotFoundException {
         Optional<Coupon> coupon = couponRepository.findByCode(couponRequest.getCode());
-        if(coupon.isPresent()) {
-            return buildCouponResponse(coupon.get(),couponRequest);
+        if (coupon.isPresent()) {
+            return buildCouponResponse(coupon.get(), couponRequest);
         }
         throw new ValueNotFoundException("No matching coupon found");
     }
 
-    private CouponResponse buildCouponResponse(Coupon coupon, CouponRequest couponRequest) {
+    private CouponResponse buildCouponResponse(final Coupon coupon, final CouponRequest couponRequest) {
         CouponResponse couponResponse = new CouponResponse();
         couponResponse.setCoupon(coupon);
         couponResponse.setTotalFare(couponRequest.getTotalFare());
@@ -33,7 +34,8 @@ public class CouponService {
         return couponResponse;
     }
 
-    private BigDecimal applyDiscount(BigDecimal totalFare, BigDecimal discount) {
-        return totalFare.subtract(totalFare.multiply(discount));
+    private BigDecimal applyDiscount(final BigDecimal totalFare, final BigDecimal discount) {
+        BigDecimal discountFare = (totalFare.multiply(discount)).divide(BigDecimal.valueOf(100), 2, RoundingMode.DOWN);
+        return totalFare.subtract(discountFare);
     }
 }

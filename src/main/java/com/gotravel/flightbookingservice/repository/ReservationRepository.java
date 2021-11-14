@@ -1,0 +1,24 @@
+package com.gotravel.flightbookingservice.repository;
+
+import com.gotravel.flightbookingservice.entity.Reservation;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+@Repository
+public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
+
+    @Query(value = "SELECT r.pnr FROM reservation r", nativeQuery = true)
+    List<String> findAllPnr();
+
+    @Query(value = "SELECT r.pnr FROM reservation r WHERE r.flight_id = ?1 and r.departure_date = ?2 and r.departure_time = ?3 ", nativeQuery = true)
+    List<String> findPnr(int flightId, LocalDate departureDate, LocalTime departureTime);
+
+    @Query(value = "SELECT r.pnr FROM reservation r WHERE r.return_flight_id = ?1 and r.return_date = ?2 and r.return_departure_time = ?3 ", nativeQuery = true)
+    List<String> findReturnPnr(int flightId, LocalDate departureDate, LocalTime departureTime);
+
+}
