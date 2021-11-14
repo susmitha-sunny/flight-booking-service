@@ -15,7 +15,7 @@ public class SeatController {
     @Autowired
     private SeatService seatService;
 
-    @GetMapping(value = "/flight-booking-service/reservedseat")
+    @GetMapping(value = "/reservedseat")
     public ReservedSeatResponse execute(@RequestBody final ReservedSeatRequest reservedSeatRequest) {
         return seatService.getReservedSeats(reservedSeatRequest);
     }

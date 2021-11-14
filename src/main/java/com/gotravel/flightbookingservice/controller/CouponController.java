@@ -16,7 +16,7 @@ public class CouponController {
     @Autowired
     private CouponService couponService;
 
-    @GetMapping(value = "/flight-booking-service/coupon")
+    @GetMapping(value = "/coupon")
     public CouponResponse execute(@RequestBody final CouponRequest couponRequest) throws ValueNotFoundException {
         return couponService.getCouponResponse(couponRequest);
     }
