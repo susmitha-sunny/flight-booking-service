@@ -17,7 +17,7 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    @PostMapping(value = "/flight-booking-service/booking")
+    @PostMapping(value = "/booking")
     public BookingResponse execute(@RequestBody final BookingRequest bookingRequest)
             throws InsertionFailedException, InvalidRequestException {
         return bookingService.getBookingResponse(bookingRequest);
