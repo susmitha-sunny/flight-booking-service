@@ -25,7 +25,6 @@ public class CouponController {
 
     @PostMapping(value = "/createcoupon")
     public Coupon execute(@RequestBody final Coupon coupon) {
-        System.out.println("Call from admin reached booking");
         return couponService.createCoupon(coupon);
     }
 }
