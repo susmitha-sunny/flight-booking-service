@@ -18,6 +18,10 @@ public class CouponService {
     @Autowired
     private CouponRepository couponRepository;
 
+    public Coupon createCoupon(final Coupon coupon) {
+        return couponRepository.save(coupon);
+    }
+
     public CouponResponse getCouponResponse(final CouponRequest couponRequest) throws ValueNotFoundException {
         Optional<Coupon> coupon = couponRepository.findByCode(couponRequest.getCode());
         if (coupon.isPresent()) {
