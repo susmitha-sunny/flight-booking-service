@@ -25,7 +25,7 @@ public class SeatService {
         List<Integer> seats = Arrays.asList(28, 31);
         List<Integer> returnSeats = new ArrayList<>();
 
-        if(reservedSeatRequest.getTripType().equals(TripType.RT)) {
+        if (reservedSeatRequest.getTripType().equals(TripType.RT)) {
             returnSeats = Arrays.asList(14);
         }
 
