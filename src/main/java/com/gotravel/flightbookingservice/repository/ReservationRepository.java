@@ -15,7 +15,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     @Query(value = "SELECT r.pnr FROM reservation r", nativeQuery = true)
     List<String> findAllPnr();
 
-    @Query(value = "SELECT r.pnr FROM reservation r WHERE r.flight_id = ?1 and r.departure_date = ?2 and r.departure_time = ?3 ", nativeQuery = true)
+    @Query(value = "SELECT r.pnr FROM reservation r WHERE r.flight_id = ?1 and r.departure_date = ?2 and r.departure_time = ?3 and r.booking_status = 'ACTIVE' ", nativeQuery = true)
     List<String> findPnr(int flightId, LocalDate departureDate, LocalTime departureTime);
 
     @Query(value = "SELECT r.pnr FROM reservation r WHERE r.return_flight_id = ?1 and r.return_date = ?2 and r.return_departure_time = ?3 ", nativeQuery = true)

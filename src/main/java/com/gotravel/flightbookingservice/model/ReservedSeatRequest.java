@@ -5,9 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class ReservedSeatRequest {
-    private FlightDetails flightDetails;
-    private FlightDetails returnFlightDetails;
-    private TripType tripType;
+    private int flightId;
+    private LocalDate departureDate;
+    private LocalTime departureTime;
 }
