@@ -50,9 +50,9 @@ public class CouponService {
         return totalFare.subtract(discountFare);
     }
 
-    @KafkaListener(topics = TOPIC, groupId = "group_id", containerFactory = "userKafkaListenerFactory")
-    public void createCouponFromQueue(final Coupon coupon) {
-        LOG.info("Consumed coupon from queue successfully {}", coupon);
-        couponRepository.save(coupon);
-    }
+//    @KafkaListener(topics = TOPIC, groupId = "group_id", containerFactory = "userKafkaListenerFactory")
+//    public void createCouponFromQueue(final Coupon coupon) {
+//        LOG.info("Consumed coupon from queue successfully {}", coupon);
+//        couponRepository.save(coupon);
+//    }
 }

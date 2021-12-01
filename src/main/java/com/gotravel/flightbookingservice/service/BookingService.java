@@ -25,6 +25,7 @@ public class BookingService {
     private PassengerRepository passengerRepository;
 
     public BookingResponse getBookingResponse(final BookingRequest bookingRequest) throws InsertionFailedException, InvalidRequestException {
+
         preValidate(bookingRequest);
 
         Reservation reservation = reservationRepository.save(buildReservation(bookingRequest));
@@ -71,6 +72,8 @@ public class BookingService {
                 .map(passengerDetails -> buildPassenger(passengerDetails, pnr, atomicInteger))
                 .collect(Collectors.toList());
 
+
+
         //List after successful insertion
         return Optional.ofNullable(passengerList)
                 .orElse(Collections.emptyList())
@@ -81,6 +84,7 @@ public class BookingService {
 
     //map passenger details from request to passenger entity
     private Passenger buildPassenger(final PassengerDetails passengerDetails,  final String pnr, final AtomicInteger atomicInteger) {
+
         Passenger pax = new Passenger();
         pax.setFirstName(passengerDetails.getFirstName());
         pax.setMiddleName(passengerDetails.getMiddleName());
@@ -163,4 +167,36 @@ public class BookingService {
         return UUID.randomUUID().toString().replaceAll("[^A-Za-z]", "");
     }
 
-}
+    public BookingResponseLight getBookingResponseLight(final BookingRequest bookingRequest) throws InvalidRequestException,
+            InsertionFailedException {
+
+        preValidate(bookingRequest);
+
+        Reservation reservation = reservationRepository.save(buildReservation(bookingRequest));
+        if (Objects.nonNull(reservation)) {
+            List<Passenger> passengerList = buildPassengerList(bookingRequest, reservation.getPnr());
+
+            BookingResponseLight bookingResponse = new BookingResponseLight();
+            bookingResponse.setPnr(reservation.getPnr());
+            bookingResponse.setTickets(Optional.ofNullable(passengerList)
+                    .orElse(Collections.emptyList())
+                    .stream().map(Passenger::getTicketNumber).collect(Collectors.toList()));
+            bookingResponse.setFirstName(Optional.ofNullable(passengerList)
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .findFirst()
+                    .map(Passenger::getFirstName)
+            .orElse(""));
+            bookingResponse.setLastName(Optional.ofNullable(passengerList)
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .findFirst()
+                    .map(Passenger::getLastName)
+                    .orElse(""));
+            bookingResponse.setEmail(reservation.getEmailId());
+            bookingResponse.setPhone(reservation.getPhone());
+            return bookingResponse;
+        }
+        throw new InsertionFailedException("Unable to create booking.");
+    }
+    }
