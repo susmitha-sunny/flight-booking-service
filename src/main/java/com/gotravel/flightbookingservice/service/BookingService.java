@@ -9,8 +9,12 @@ import com.gotravel.flightbookingservice.repository.PassengerRepository;
 import com.gotravel.flightbookingservice.repository.ReservationRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -199,4 +203,33 @@ public class BookingService {
         }
         throw new InsertionFailedException("Unable to create booking.");
     }
+
+    public void cancelreservation(String airlineName) {
+        List<String> pnrList =  reservationRepository.findPnrByAirlineName(airlineName);
+        pnrList
+                .stream()
+                .forEach(s -> {
+                    reservationRepository.cancelReservation(s);
+                    send("Your booking with pnr " + s + " is cancelled due to unavailability of " + airlineName + " airline. Sorry for the inconvenience");
+                });
+
     }
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    public void send(String content) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
+
+            helper.setFrom("customercare@gotravel.com");
+            helper.setTo("user@mail.com");
+            helper.setSubject("Important!! Your reservation is cancelled");
+            mimeMessage.setContent(content, "text/html");
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            System.out.println(e);
+        }
+    }
+}

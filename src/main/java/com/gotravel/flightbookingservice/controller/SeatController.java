@@ -20,9 +20,9 @@ public class SeatController {
     @GetMapping(value = "/reservedseat")
     public ReservedSeatResponse execute(@RequestParam(value = "flightId") final int flightId,
                                         @RequestParam(value = "departureDate") final String departureDate,
-                                        @RequestParam(value = "departureTime") String departureTime
+                                        @RequestParam(value = "departureTime") final String departureTime
                                         ) {
-        departureTime = departureTime.substring(1, departureTime.length() - 1);
+        String newDepartureTime = departureTime.substring(1, departureTime.length() - 1);
         ReservedSeatRequest request = new ReservedSeatRequest();
         request.setFlightId(flightId);
         if (departureDate == null || departureDate.equals("null")) {
@@ -30,10 +30,10 @@ public class SeatController {
         } else {
             request.setDepartureDate(LocalDate.parse(departureDate));
         }
-        if (departureTime == null || departureTime.equals("null")) {
+        if (newDepartureTime == null || newDepartureTime.equals("null")) {
             request.setDepartureTime(null);
         } else {
-            request.setDepartureTime(LocalTime.parse(departureTime));
+            request.setDepartureTime(LocalTime.parse(newDepartureTime));
         }
         return seatService.getReservedSeats(request);
     }

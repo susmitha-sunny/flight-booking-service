@@ -1,6 +1,7 @@
 package com.gotravel.flightbookingservice.controller;
 
 
+import com.gotravel.flightbookingservice.entity.Coupon;
 import com.gotravel.flightbookingservice.exception.InsertionFailedException;
 import com.gotravel.flightbookingservice.exception.InvalidRequestException;
 import com.gotravel.flightbookingservice.model.*;
@@ -19,6 +20,12 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
+
+    @CrossOrigin
+    @PostMapping(value = "/cancelreservation")
+    public void execute(@RequestBody final String airlineName) {
+        bookingService.cancelreservation(airlineName);
+    }
 
     @CrossOrigin
     @PostMapping(value = "/booking")
