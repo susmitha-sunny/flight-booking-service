@@ -2,8 +2,10 @@ package com.gotravel.flightbookingservice.repository;
 
 import com.gotravel.flightbookingservice.entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,5 +22,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     @Query(value = "SELECT r.pnr FROM reservation r WHERE r.return_flight_id = ?1 and r.return_date = ?2 and r.return_departure_time = ?3 ", nativeQuery = true)
     List<String> findReturnPnr(int flightId, LocalDate departureDate, LocalTime departureTime);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE reservation r SET r.booking_status = 'CANCELLED' WHERE r.pnr = ?1", nativeQuery = true)
+    void cancelReservation(String pnr);
+
+    @Query(value = "SELECT r.pnr FROM reservation r WHERE r.airline_name= ?1 ", nativeQuery = true)
+    List<String> findPnrByAirlineName(String airlineName);
 
 }
